@@ -7,7 +7,6 @@ Application WEB en python de réservations de table d'un restaurant par ORSINI M
 ## Langages utilisés :
 
 * PYTHON
-* PHP
 * HTML/CSS
 * SQL
 
@@ -18,7 +17,7 @@ Application WEB en python de réservations de table d'un restaurant par ORSINI M
 On va utiliser **FLASK** pour lancer du python sur l'application WEB 
 
 ####
-> set FLASK_APP=hello  
+> set FLASK_env=hello  
 > flask run
 
 L'adresse du serveur (locale) est : http://127.0.0.1:5000/
