@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+{% block title %}Incrisption{% endblock %}
+
+<head>
+    {% block head %}
+    {{ super() }}
+    {% endblock %}
+</head>
+
+
+<body>
+    {% block content %}
+    <form class="container">
+        <div class="form-group">
+            <label for="inputLastname">Nom :</label>
+            <input type="lastname" class="form-control" id="inputLastname" aria-describedby="lastnameHelp"
+                placeholder="Entrer votre nom">
+        </div>
+        <div class="form-group">
+            <label for="inputFirstname">Prénom :</label>
+            <input type="firstname" class="form-control" id="inputEmail" aria-describedby="firstnameHelp"
+                placeholder="Entrer votre prénom">
+        </div>
+        <div class="form-group">
+            <label for="inputEmail">E-mail :</label>
+            <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp"
+                placeholder="Entrer un email">
+            <small id="emailHelp" class="form-text text-muted">On ne va pas balancer votre mail à n'importe qui
+                !</small>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword">Mot de passe :</label>
+            <input type="password" class="form-control" id="inputPassword" placeholder="Entrer un mot de passe">
+        </div>
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="CheckRGPD">
+            <label class="form-check-label" for="checkRGPD">J'accepte les conditions RGPD</label>
+        </div>
+        <button type="submit" class="btn btn-primary">S'incrire</button>
+    </form>
+    {% endblock %}
+
+    <header>
+        {% block header %}
+        {{ super() }}
+        {% endblock %}
+    </header>
+</body>
