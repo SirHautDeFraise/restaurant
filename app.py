@@ -21,10 +21,7 @@ def show_user_profile(username):
 def login():
     return "<p>login</p>"
 
+
 @app.route('/inscription', methods=['GET', 'POST'])
 def register():
-    
-    if request.method == 'POST':
-        return "Vous avez envoyé : {msg}".format(msg=request.form['msg'])
     return render_template('register.html')
-    
