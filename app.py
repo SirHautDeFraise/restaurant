@@ -2,6 +2,7 @@ from flask import Flask
 from markupsafe import escape
 from flask import request
 from flask import render_template
+import sqlite3
 
 app = Flask(__name__)
 
@@ -23,5 +24,11 @@ def login():
 
 
 @app.route('/reservation')
-def hello(name=None):
-    return render_template('hello.html', name=name)
+def reservation():
+    tables = get_tables_id()
+    return render_template('tablesList.html', tables=tables)
+
+
+def get_tables_id():
+    tables = [{1: "libre", 2: "occupé", 3: "libre", 4: "occupé", 5: "libre"}]
+    return tables
