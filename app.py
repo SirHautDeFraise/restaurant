@@ -17,9 +17,9 @@ def show_user_profile(username):
     return f'User {escape(username)}'
 
 
-@app.route('/connexion')
+@app.route('/connexion', methods=['GET', 'POST'])
 def login():
-    return "<p>login</p>"
+    return render_template('connexion.html')
 
 
 @app.route('/inscription', methods=['GET', 'POST'])
