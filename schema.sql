@@ -32,7 +32,7 @@ INSERT INTO users(firstname, lastname) VALUES
 	('michel', 'taleur'),
 	('lucas', 'titou');
 
-INSERT INTO tables(status,period,status,seats) VALUES
+INSERT INTO tables(id,period,status,seats) VALUES
 	(1,'midi','libre',2),
 	(1,'soir','libre',2),
 	(2,'midi','occupé',4),
