@@ -10,24 +10,26 @@
 {% block content %}
 
 <table class="table">
-  <thead>
+    <thead>
     <tr>
-      <th scope="col">#</th>
-      <th scope="col">disponibilité</th>
-      <th scope="col">horraire</th>
+        <th scope="col">#</th>
+        <th scope="col">disponibilité</th>
+        <th scope="col">horraire</th>
+        <th scope="col">Action</th>
     </tr>
-  </thead>
-  <tbody>
-      {% for table in tables %}
-      {% for id,status in table.items() %}
+    </thead>
+    <tbody>
+    {% for table in tables %}
     <tr>
-      <th scope="row">{{id}}</th>
-      <td>{{status}}</td>
-      <td>12h-15h</td>
+        <th scope="row">{{table['id']}}</th>
+        <td>{{table['period']}}</td>
+        <td>{{table['status']}}</td>
+        <td><a href="{{ url_for('show_booking_table', reservation_id = table['id']) }}">
+            <button type="button" class="btn btn-info">Réserver</button>
+            </a></td>
     </tr>
     {% endfor %}
-    {% endfor %}
-  </tbody>
+    </tbody>
 </table>
 
 {% endblock %}

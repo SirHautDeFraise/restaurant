@@ -3,13 +3,27 @@ from markupsafe import escape
 from flask import request
 from flask import render_template
 import sqlite3
+import os
+import db
+from db import get_db
 
-app = Flask(__name__)
+app = Flask(__name__, instance_relative_config=True)
+app.config.from_mapping(
+    SECRET_KEY='dev',
+    DATABASE=os.path.join(app.instance_path, 'restaurant.sqlite'),
+)
+# ensure the instance folder exists
+try:
+    os.makedirs(app.instance_path)
+except OSError:
+    pass
+
+db.init_app(app)
 
 
 @app.route("/")
 def hello_world():
-    return "<p>Hello World</p>"
+    return 'yo'
 
 
 @app.route('/user/<username>')
@@ -35,16 +49,18 @@ def show_booking():
     return render_template('booking.html', free_tables=free_tables)
 
 
-@app.route('/reservation/<int:reservation_id>')
+@app.route('/reservation/<int:reservation_id>', methods=['GET', 'POST'])
 def show_booking_table(reservation_id):
     return render_template('booking.html', reservation_id=reservation_id)
 
 
 # Return all tables in a dictionary as id => state
 def get_tables():
-    tables = [{1: "libre", 2: "occupé", 3: "libre", 4: "occupé", 5: "libre"}]
+    db = get_db()
+    tables = db.execute(
+        'SELECT * FROM tables'
+    ).fetchall()
     return tables
-
 
 # Return all tables that are free
 def get_free_tables():
