@@ -24,9 +24,10 @@
         <th scope="row">{{table['id']}}</th>
         <td>{{table['periode']}}</td>
         <td>{{table['status']}}</td>
+        {% if table['status'] == 'Occupé' %}
         <td>
-            <a href="{{ url_for('show_booking_table', reservation_id = table['id'], reservation_periode = table['periode']) }}">
-                <button type="button" class="btn btn-info">Réserver</button>
+            <a href="#">
+                <button type="button" class="btn btn-info" disabled>Réserver</button>
             </a>
         </td>
         <td>
@@ -34,6 +35,18 @@
                 <button type="button" class="btn btn-info">Annuler réservation</button>
             </a>
         </td>
+        {% else %}
+        <td>
+            <a href="{{ url_for('show_booking_table', reservation_id = table['id'], reservation_periode = table['periode']) }}">
+                <button type="button" class="btn btn-info">Réserver</button>
+            </a>
+        </td>
+        <td>
+            <a href="#">
+                <button type="button" class="btn btn-info" disabled>Annuler réservation</button>
+            </a>
+        </td>
+        {% endif %}
     </tr>
     {% endfor %}
     </tbody>

@@ -25,13 +25,25 @@
         </ul>
 
         <div class="col-md-3 text-end">
-            <button type="button" class="btn btn-outline-primary me-2">Login</button>
-            <button type="button" class="btn btn-primary">Sign-up</button>
+            {%if not(session['id'])%}
+            <a href="/connexion">
+                <button type="button" class="btn btn-outline-primary me-2">Connexion
+                </button>
+            </a>
+
+            <a href="/inscription">
+                <button type="button" class="btn btn-primary">S'inscrire</button>
+            </a>
+            {% else %}
+            <a href="/deconnexion">
+                <button type="button" class="btn btn-primary">Se déconnecter</button>
+            </a>
+            {% endif %}
         </div>
     </header>
 </div>
 {% endblock %}
-<div id="content" style = " width: 70%; margin: auto;">{% block content %}{% endblock %}</div>
+<div id="content" style=" width: 70%; margin: auto;">{% block content %}{% endblock %}</div>
 
 </body>
 </html>

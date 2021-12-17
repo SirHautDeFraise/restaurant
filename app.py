@@ -24,17 +24,26 @@ except OSError:
 db.init_app(app)
 
 
+def is_not_logged():
+    return session.get('id') is None
+
+
 @app.route("/")
-def redirect():
-    if session.get('id') == True:
-        return 'yo'
-    return 'tempis'
+def home():
+    if is_not_logged():
+        return redirect(url_for('login'))
+    return redirect(url_for('disponibilites'))
 
 
 @app.route('/user/<username>')
 def show_user_profile(username):
     # show the user profile for that user
     return f'User {escape(username)}'
+
+@app.route('/deconnexion')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
 
 
 @app.route('/connexion', methods=('GET', 'POST'))
@@ -68,6 +77,7 @@ def login():
 
     return render_template('login.html')
 
+
 @app.route('/inscription', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
@@ -78,7 +88,7 @@ def register():
         db = get_db()
         error = None
         if db.execute(
-            'SELECT * FROM users WHERE mail = ?', (mail,)
+                'SELECT * FROM users WHERE mail = ?', (mail,)
         ).fetchone() is not None:
             error = "L'e-mail {} est déjà inscrit.".format(mail)
 
@@ -86,8 +96,8 @@ def register():
             db.execute(
                 'INSERT INTO users (firstname, lastname, mail, password)'
                 + 'VALUES (?, ?, ?, ?)',
-                (lastname, firstname, mail,password),
-                )
+                (lastname, firstname, mail, password),
+            )
             db.commit()
             return redirect(url_for('login'))
 
@@ -98,12 +108,16 @@ def register():
 
 @app.route('/disponibilites')
 def reservation():
+    if is_not_logged():
+        return redirect(url_for('login'))
     tables = get_tables()
     return render_template('tablesList.html', tables=tables)
 
 
 @app.route('/reservation/<int:reservation_id>/<string:reservation_periode>', methods=['GET', 'POST'])
 def show_booking_table(reservation_id, reservation_periode):
+    if is_not_logged():
+        return redirect(url_for('login'))
     seats = get_seats(reservation_id, reservation_periode)
     return render_template('booking.html', reservation_id=reservation_id, reservation_periode=reservation_periode,
                            seats=seats)
@@ -111,6 +125,8 @@ def show_booking_table(reservation_id, reservation_periode):
 
 @app.route('/annulerReservation/<int:reservation_id>/<string:reservation_periode>', methods=['GET'])
 def cancel_booking(reservation_id, reservation_periode):
+    if is_not_logged():
+        return redirect(url_for('login'))
     db = get_db()
     db.execute(
         "UPDATE tables SET status = 'Libre' WHERE id= ? AND periode = ?",
@@ -145,6 +161,8 @@ def get_seats(table_id, periode):
 
 @app.route('/booking', methods=['GET', 'POST'])
 def booking():
+    if is_not_logged():
+        return redirect(url_for('login'))
     data = request.form
     db = get_db()
     db.set_trace_callback(print)
