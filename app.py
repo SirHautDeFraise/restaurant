@@ -53,7 +53,6 @@ def show_booking_table(reservation_id, reservation_periode):
 @app.route('/annulerReservation/<int:reservation_id>/<string:reservation_periode>', methods=['GET'])
 def cancel_booking(reservation_id, reservation_periode):
     db = get_db()
-    db.set_trace_callback(print)
     db.execute(
         "UPDATE tables SET status = 'Libre' WHERE id= ? AND periode = ?",
         (reservation_id, reservation_periode))
