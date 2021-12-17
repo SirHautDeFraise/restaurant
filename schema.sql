@@ -27,10 +27,8 @@ CREATE TABLE reservations (
 	Foreign key (id_user) References users(id)
 );
 
-INSERT INTO users(firstname, lastname) VALUES
-	('olivier', 'giroud'),
-	('michel', 'taleur'),
-	('lucas', 'titou');
+INSERT INTO users(firstname, lastname, mail, password) VALUES
+	('thibault', 'laude', 'thibou@gmail.com', 'mdp');
 
 INSERT INTO tables(id,periode,status,seats) VALUES
 	(1,'Midi','Libre',2),

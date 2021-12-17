@@ -11,7 +11,7 @@
 
 <body>
     {% block content %}
-    <form class="container" method="post">
+    <form action="/inscription" class="container" method="post">
         <div class="form-group">
             <label for="inputLastname">Nom :</label>
             <input type="lastname" class="form-control" id="inputLastname" name="lastname"
@@ -33,10 +33,6 @@
             <label for="inputPassword">Mot de passe :</label>
             <input name="password" type="password" class="form-control" id="inputPassword" placeholder="Entrer un mot de passe">
         </div>
-        <!-- <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="CheckRGPD">
-            <label class="form-check-label" for="checkRGPD">J'accepte les conditions RGPD</label>
-        </div> -->
         <button type="submit" class="btn btn-primary">S'incrire</button>
         {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -49,10 +45,4 @@
         {% endwith %}
     </form>
     {% endblock %}
-
-    <footer>
-        {% block header %}
-        {{ super() }}
-        {% endblock %}
-    </footer>
 </body>
