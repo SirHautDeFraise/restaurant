@@ -10,30 +10,28 @@
 {% block content %}
 
 
-<form>
+<form action="{{ url_for('booking') }}" method="post">
 
     <div class="mb-3">
         <label for="table_id" class="form-label">Numéro de la table</label>
-        {% if reservation_id is defined %}
-
-        <input type="text" class="form-control" id="table_id" placeholder="{{ reservation_id }}" readonly>
-    </div>
-    {% else %}
-    <select class="form-select" aria-label="Default select example">
-        <option selected>Selectionnez une table libre</option>
-        {% for table in free_tables %}
-        <option value="{{table}}">{{table}}</option>
-        {% endfor %}
-    </select>
+        <input name = "reservation_id" type="text" class="form-control" id="table_id" value="{{ reservation_id }}" readonly>
     </div>
 
-    {% endif %}
+    <label for="table_id" class="form-label">Periode de réservation</label>
+    <input name="reservation_periode" type="text" class="form-control" id="table_periode" value="{{ reservation_periode }}" readonly>
 
     <div class="mb-3">
-        <label for="exampleInputPassword1" class="form-label">Password</label>
-        <input type="password" class="form-control" id="exampleInputPassword1">
+        <label for="table_seats" class="form-label">Selectionnez le nombre de personne</label>
+        <select name="seats" class="form-select" id="table_seats" aria-label="Default select example">
+            <option selected>1</option>
+            {% for seat in seats %}
+            {% if seat != 1 %}
+            <option value="{{ seat }}">{{ seat }}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary">Réserver</button>
 </form>
 
 {% endblock %}

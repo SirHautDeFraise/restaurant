@@ -13,8 +13,8 @@
     <thead>
     <tr>
         <th scope="col">#</th>
-        <th scope="col">disponibilité</th>
         <th scope="col">horraire</th>
+        <th scope="col">disponibilité</th>
         <th scope="col">Action</th>
     </tr>
     </thead>
@@ -22,11 +22,11 @@
     {% for table in tables %}
     <tr>
         <th scope="row">{{table['id']}}</th>
-        <td>{{table['period']}}</td>
+        <td>{{table['periode']}}</td>
         <td>{{table['status']}}</td>
-        <td><a href="{{ url_for('show_booking_table', reservation_id = table['id']) }}">
+        <td><a href="{{ url_for('show_booking_table', reservation_id = table['id'], reservation_periode = table['periode']) }}">
             <button type="button" class="btn btn-info">Réserver</button>
-            </a></td>
+        </a></td>
     </tr>
     {% endfor %}
     </tbody>

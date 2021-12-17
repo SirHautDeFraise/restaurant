@@ -43,15 +43,11 @@ def reservation():
     return render_template('tablesList.html', tables=tables)
 
 
-@app.route('/reservation')
-def show_booking():
-    free_tables = get_free_tables()
-    return render_template('booking.html', free_tables=free_tables)
-
-
-@app.route('/reservation/<int:reservation_id>', methods=['GET', 'POST'])
-def show_booking_table(reservation_id):
-    return render_template('booking.html', reservation_id=reservation_id)
+@app.route('/reservation/<int:reservation_id>/<string:reservation_periode>', methods=['GET', 'POST'])
+def show_booking_table(reservation_id, reservation_periode):
+    seats = get_seats(reservation_id, reservation_periode)
+    return render_template('booking.html', reservation_id=reservation_id, reservation_periode=reservation_periode,
+                           seats=seats)
 
 
 # Return all tables in a dictionary as id => state
@@ -62,12 +58,29 @@ def get_tables():
     ).fetchall()
     return tables
 
-# Return all tables that are free
-def get_free_tables():
-    tables = get_tables()
-    free_tables = []
-    for table in tables:
-        for table_id, status in table.items():
-            if status == "libre":
-                free_tables.append(table_id)
-    return free_tables
+
+def get_seats(table_id, periode):
+    db = get_db()
+    seats_number = db.execute(
+        'SELECT seats FROM tables WHERE id = ? AND periode = ?', (table_id, periode,)
+    ).fetchone()
+
+    seats = []
+    count = 1
+
+    while count <= seats_number[0]:
+        seats.append(count)
+        count = count + 1
+    return seats
+
+
+@app.route('/booking', methods=['GET', 'POST'])
+def booking():
+    data = request.form
+    db = get_db()
+    db.set_trace_callback(print)
+    db.execute(
+        "UPDATE tables SET status = 'Occupé' WHERE id= ? AND periode = ?",
+        (data['reservation_id'], data['reservation_periode'],))
+    db.commit()
+    return render_template('bookingSuccess.html')
