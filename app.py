@@ -37,83 +37,56 @@ def base():
 def login():
     if request.method == 'POST':
         mail = request.form['email']
-        mdp = request.form['password']
+        password = request.form['password']
         db = get_db()
         error = None
         user = db.execute(
             'SELECT * FROM users WHERE mail = ?', (mail,)
         ).fetchone()
 
+        # print(user)
+
         if user is None:
-            error = 'Incorrect username.'
-        elif not check_password_hash(user['mdp'], mdp):
+            error = 'Incorrect mail.'
+        elif user['password'] != password:
             error = 'Incorrect password.'
 
         if error is None:
             session.clear()
-            session['user_id'] = user['id']
-            return redirect(url_for('index'))
+            session['id'] = user['id']
+            session['firstname'] = user['firstname']
+            session['lastname'] = user['lastname']
+            session['email'] = user['mail']
+            session['password'] = user['password']
+            return redirect(url_for('register'))
 
         flash(error)
 
-    return render_template('login.html', mail=mail, mdp=mdp, db=db)
+    return render_template('login.html')
 
-    # if request.form['email'] != 'thibou@gmail.com' or request.form['password'] != 'mdp':
-    #     error = 'Mauvais E-mail/Mot de passe.'
-    # else:
-    #     return redirect(url_for('reservation'))
-    # return render_template('login.html', error=error)
-
-    # email = request.form['email']
-    # pwd = request.form['password']
-    # if email not in database:
-    #     return render_template('login.html')
-    # else:
-    #     if database[email] != pwd:
-    #         return render_template('login.html')
-    #     else:
-    #         return render_template('base.html', name=email)
-
-
-@app.route('/inscription', methods=['GET', 'POST'])
+@app.route('/register', methods=('GET', 'POST'))
 def register():
+    if request.method == 'POST':
+        lastname = request.form['lastname']
+        firstname = request.form['firstname']
+        mail = request.form['email']
+        password = request.form['password']
+        db = get_db()
+        error = None
+
+        if db.execute(
+            'SELECT id FROM users WHERE mail = ?', (mail,)
+        ).fetchone() is not None:
+            error = 'User {} is already registered.'.format(mail)
+
+        if error is None:
+            db.execute(
+                'INSERT INTO users (firstname, lastname, mail, password) '
+                + 'VALUES (?, ?, ?, ?)',
+                (lastname, firstname, mail,password))
+            db.commit()
+            return redirect(url_for('login'))
+
+        flash(error)
+
     return render_template('register.html')
-
-
-# @app.route('/disponibilites')
-# def reservation():
-#     tables = get_tables()
-#     return render_template('tablesList.html', tables=tables)
-
-
-# @app.route('/reservation')
-# def show_booking():
-#     free_tables = get_free_tables()
-#     return render_template('booking.html', free_tables=free_tables)
-
-
-# @app.route('/reservation/<int:reservation_id>', methods=['GET', 'POST'])
-# def show_booking_table(reservation_id):
-#     return render_template('booking.html', reservation_id=reservation_id)
-
-# Return all tables in a dictionary as id => state
-
-
-# def get_tables():
-#     db = get_db()
-#     tables = db.execute(
-#         'SELECT * FROM tables'
-#     ).fetchall()
-#     return tables
-
-# Return all tables that are free
-
-
-# def get_free_tables():
-#     tables = get_tables()
-#     free_tables = []
-#     for table in tables:
-#         for table_id, status in table.items():
-#             if status == "libre":
-#                 free_tables.append(table_id)
-#     return free_tables

@@ -2,7 +2,7 @@ DROP TABLE users;
 DROP TABLE tables;
 DROP TABLE reservations;
 
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
 	id INTEGER Primary Key AutoIncrement,
 	firstname TEXT,
 	lastname TEXT,
@@ -10,7 +10,7 @@ CREATE TABLE users (
 	password TEXT
 );
 
-CREATE TABLE tables (
+CREATE TABLE IF NOT EXISTS tables (
 	id INTEGER,
     period TEXT,
 	status TEXT NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE tables (
 	PRIMARY KEY (id, period)
 );
 
-CREATE TABLE reservations (
+CREATE TABLE IF NOT EXISTS reservations (
 	id INTEGER PRIMARY KEY,
 	id_table INTEGER,
 	date DATE,
@@ -28,9 +28,8 @@ CREATE TABLE reservations (
 );
 
 INSERT INTO users(firstname, lastname, mail, password) VALUES
-	('olivier', 'giroud', 'thibou@gmail.com', 'mdp');
-	-- ('michel', 'taleur',),
-	-- ('lucas', 'titou',);
+	('thibault', 'laude', 'thibou@gmail.com', 'mdp');
+
 
 INSERT INTO tables(id,period,status,seats) VALUES
 	(1,'midi','libre',2),
