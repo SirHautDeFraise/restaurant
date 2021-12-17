@@ -50,6 +50,17 @@ def show_booking_table(reservation_id, reservation_periode):
                            seats=seats)
 
 
+@app.route('/annulerReservation/<int:reservation_id>/<string:reservation_periode>', methods=['GET'])
+def cancel_booking(reservation_id, reservation_periode):
+    db = get_db()
+    db.set_trace_callback(print)
+    db.execute(
+        "UPDATE tables SET status = 'Libre' WHERE id= ? AND periode = ?",
+        (reservation_id, reservation_periode))
+    db.commit()
+    return render_template('cancelBookingSuccess.html')
+
+
 # Return all tables in a dictionary as id => state
 def get_tables():
     db = get_db()
