@@ -38,4 +38,4 @@ INSERT INTO tables(id,period,status,seats) VALUES
 	(2,'soir','occupé',4),
 	(3,'midi','libre',6),
 	(3,'soir','libre',6),
-	(4,'soir','libre',10);
+	(4,'soir','libre',10);.

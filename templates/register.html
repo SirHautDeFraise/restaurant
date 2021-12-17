@@ -11,7 +11,7 @@
 
 <body>
     {% block content %}
-    <form class="container" action="/login">
+    <form class="container" action="/register">
         <div class="form-group">
             <label for="inputLastname">Nom :</label>
             <input type="lastname" class="form-control" id="inputLastname" aria-describedby="lastnameHelp"
@@ -38,7 +38,15 @@
             <label class="form-check-label" for="checkRGPD">J'accepte les conditions RGPD</label>
         </div> -->
         <button type="submit" class="btn btn-primary">S'incrire</button>
-        <p class="error"><strong>Erreur :</strong> {{ error }}</p>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class=flashes>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
     </form>
     {% endblock %}
 

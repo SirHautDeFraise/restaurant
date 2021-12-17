@@ -47,9 +47,9 @@ def login():
         # print(user)
 
         if user is None:
-            error = 'Incorrect mail.'
+            error = 'Mauvais E-Mail.'
         elif user['password'] != password:
-            error = 'Incorrect password.'
+            error = 'Mauvais mot de passe.'
 
         if error is None:
             session.clear()
@@ -75,13 +75,13 @@ def register():
         error = None
 
         if db.execute(
-            'SELECT id FROM users WHERE mail = ?', (mail,)
+            'SELECT * FROM users WHERE mail = ?', (mail,)
         ).fetchone() is not None:
-            error = 'User {} is already registered.'.format(mail)
+            error = 'Cet E-Mail {} est déjà inscrit.'.format(mail)
 
         if error is None:
             db.execute(
-                'INSERT INTO users (firstname, lastname, mail, password) '
+                'INSERT INTO users (firstname, lastname, mail, password)'
                 + 'VALUES (?, ?, ?, ?)',
                 (lastname, firstname, mail,password))
             db.commit()
