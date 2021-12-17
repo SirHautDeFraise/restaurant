@@ -2,7 +2,7 @@ DROP TABLE users;
 DROP TABLE tables;
 DROP TABLE reservations;
 
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE users (
 	id INTEGER Primary Key AutoIncrement,
 	firstname TEXT,
 	lastname TEXT,
@@ -10,15 +10,15 @@ CREATE TABLE IF NOT EXISTS users (
 	password TEXT
 );
 
-CREATE TABLE IF NOT EXISTS tables (
+CREATE TABLE tables (
 	id INTEGER,
-    period TEXT,
+    periode TEXT,
 	status TEXT NOT NULL,
 	seats INTEGER NOT NULL,
-	PRIMARY KEY (id, period)
+	PRIMARY KEY (id, periode)
 );
 
-CREATE TABLE IF NOT EXISTS reservations (
+CREATE TABLE reservations (
 	id INTEGER PRIMARY KEY,
 	id_table INTEGER,
 	date DATE,
@@ -27,15 +27,16 @@ CREATE TABLE IF NOT EXISTS reservations (
 	Foreign key (id_user) References users(id)
 );
 
-INSERT INTO users(firstname, lastname, mail, password) VALUES
-	('thibault', 'laude', 'thibou@gmail.com', 'mdp');
+INSERT INTO users(firstname, lastname) VALUES
+	('olivier', 'giroud'),
+	('michel', 'taleur'),
+	('lucas', 'titou');
 
-
-INSERT INTO tables(id,period,status,seats) VALUES
-	(1,'midi','libre',2),
-	(1,'soir','libre',2),
-	(2,'midi','occupé',4),
-	(2,'soir','occupé',4),
-	(3,'midi','libre',6),
-	(3,'soir','libre',6),
-	(4,'soir','libre',10);.
+INSERT INTO tables(id,periode,status,seats) VALUES
+	(1,'Midi','Libre',2),
+	(1,'Soir','Libre',2),
+	(2,'Midi','Occupé',4),
+	(2,'Soir','Occupé',4),
+	(3,'Midi','Libre',6),
+	(3,'Soir','Libre',6),
+	(4,'Soir','Libre',10);

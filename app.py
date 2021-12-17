@@ -2,15 +2,8 @@ from flask import Flask
 from markupsafe import escape
 from flask import request
 from flask import render_template
-from flask import redirect
-from flask import url_for
-from flask import session
-from flask import flash
-from werkzeug.security import check_password_hash, generate_password_hash
 import sqlite3
 import os
-
-from werkzeug.utils import redirect
 import db
 from db import get_db
 
@@ -29,64 +22,75 @@ db.init_app(app)
 
 
 @app.route("/")
-def base():
-    return render_template('login.html')
+def hello_world():
+    return 'yo'
 
 
-@app.route('/login', methods=('GET', 'POST'))
+@app.route('/user/<username>')
+def show_user_profile(username):
+    # show the user profile for that user
+    return f'User {escape(username)}'
+
+
+@app.route('/connexion')
 def login():
-    if request.method == 'POST':
-        mail = request.form['email']
-        password = request.form['password']
-        db = get_db()
-        error = None
-        user = db.execute(
-            'SELECT * FROM users WHERE mail = ?', (mail,)
-        ).fetchone()
+    return "<p>login</p>"
 
-        # print(user)
 
-        if user is None:
-            error = 'Mauvais E-Mail.'
-        elif user['password'] != password:
-            error = 'Mauvais mot de passe.'
+@app.route('/disponibilites')
+def reservation():
+    tables = get_tables()
+    return render_template('tablesList.html', tables=tables)
 
-        if error is None:
-            session.clear()
-            session['id'] = user['id']
-            session['firstname'] = user['firstname']
-            session['lastname'] = user['lastname']
-            session['email'] = user['mail']
-            session['password'] = user['password']
-            return redirect(url_for('register'))
 
-        flash(error)
+@app.route('/reservation/<int:reservation_id>/<string:reservation_periode>', methods=['GET', 'POST'])
+def show_booking_table(reservation_id, reservation_periode):
+    seats = get_seats(reservation_id, reservation_periode)
+    return render_template('booking.html', reservation_id=reservation_id, reservation_periode=reservation_periode,
+                           seats=seats)
 
-    return render_template('login.html')
 
-@app.route('/register', methods=('GET', 'POST'))
-def register():
-    if request.method == 'POST':
-        lastname = request.form['lastname']
-        firstname = request.form['firstname']
-        mail = request.form['email']
-        password = request.form['password']
-        db = get_db()
-        error = None
-        if db.execute(
-            'SELECT * FROM users WHERE mail = ?', (mail,)
-        ).fetchone() is not None:
-            error = "L'e-mail {} est déjà inscrit.".format(mail)
+@app.route('/annulerReservation/<int:reservation_id>/<string:reservation_periode>', methods=['GET'])
+def cancel_booking(reservation_id, reservation_periode):
+    db = get_db()
+    db.execute(
+        "UPDATE tables SET status = 'Libre' WHERE id= ? AND periode = ?",
+        (reservation_id, reservation_periode))
+    db.commit()
+    return render_template('cancelBookingSuccess.html')
 
-        if error is None:
-            db.execute(
-                'INSERT INTO users (firstname, lastname, mail, password)'
-                + 'VALUES (?, ?, ?, ?)',
-                (lastname, firstname, mail,password),
-                )
-            db.commit()
-            return redirect(url_for('login'))
 
-        flash(error)
+# Return all tables in a dictionary as id => state
+def get_tables():
+    db = get_db()
+    tables = db.execute(
+        'SELECT * FROM tables'
+    ).fetchall()
+    return tables
 
-    return render_template('register.html')
+
+def get_seats(table_id, periode):
+    db = get_db()
+    seats_number = db.execute(
+        'SELECT seats FROM tables WHERE id = ? AND periode = ?', (table_id, periode,)
+    ).fetchone()
+
+    seats = []
+    count = 1
+
+    while count <= seats_number[0]:
+        seats.append(count)
+        count = count + 1
+    return seats
+
+
+@app.route('/booking', methods=['GET', 'POST'])
+def booking():
+    data = request.form
+    db = get_db()
+    db.set_trace_callback(print)
+    db.execute(
+        "UPDATE tables SET status = 'Occupé' WHERE id= ? AND periode = ?",
+        (data['reservation_id'], data['reservation_periode'],))
+    db.commit()
+    return render_template('bookingSuccess.html')
