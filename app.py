@@ -73,22 +73,10 @@ def register():
         password = request.form['password']
         db = get_db()
         error = None
-        # if error is None:
-        #     try:
-        #         db.execute(
-        #             "INSERT INTO users (firstname, lastname, mail, password) VALUES (?, ?, ?, ?)",
-        #             (lastname, firstname, mail, password),
-        #             )
-            
-        #         db.commit()
-        #     except db.IntegrityError:
-        #         error = f"User {mail} is already registered."
-        #     else:
-        #         return redirect(url_for("auth.login"))
         if db.execute(
             'SELECT * FROM users WHERE mail = ?', (mail,)
         ).fetchone() is not None:
-            error = 'Cet E-Mail {} est déjà inscrit.'.format(mail)
+            error = "L'e-mail {} est déjà inscrit.".format(mail)
 
         if error is None:
             db.execute(
