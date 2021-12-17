@@ -11,7 +11,7 @@
 
 <body>
     {% block content %}
-    <form class="container" action="/register">
+    <form class="container" method="post">
         <div class="form-group">
             <label for="inputLastname">Nom :</label>
             <input type="lastname" class="form-control" id="inputLastname" aria-describedby="lastnameHelp"
@@ -19,7 +19,7 @@
         </div>
         <div class="form-group">
             <label for="inputFirstname">Prénom :</label>
-            <input type="firstname" class="form-control" id="inputEmail" aria-describedby="firstnameHelp"
+            <input type="firstname" class="form-control" id="inputFirstname" aria-describedby="firstnameHelp"
                 placeholder="Entrer votre prénom">
         </div>
         <div class="form-group">
