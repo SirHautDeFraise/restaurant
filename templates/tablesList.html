@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Reservation{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block header %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">disponibilité</th>
+        <th scope="col">horraire</th>
+        <th scope="col">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for table in tables %}
+    <tr>
+        <th scope="row">{{table['id']}}</th>
+        <td>{{table['period']}}</td>
+        <td>{{table['status']}}</td>
+        <td><a href="{{ url_for('show_booking_table', reservation_id = table['id']) }}">
+            <button type="button" class="btn btn-info">Réserver</button>
+            </a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
